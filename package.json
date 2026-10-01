@@ -1,0 +1,158 @@
+{
+  "name": "run-script-in-terminal",
+  "displayName": "Run Script in Terminal",
+  "description": "Right-click a .sh, .bat, .cmd or .ps1 file and run it instantly in a new integrated terminal.",
+  "version": "1.0.0",
+  "publisher": "chaiyaboons",
+  "license": "MIT",
+  "icon": "images/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chaiyaboons/vscode-run-script-in-terminal.git"
+  },
+  "bugs": {
+    "url": "https://github.com/chaiyaboons/vscode-run-script-in-terminal/issues"
+  },
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "shell",
+    "bash",
+    "batch",
+    "powershell",
+    "terminal",
+    "run",
+    "script"
+  ],
+  "main": "./extension.js",
+  "activationEvents": [],
+  "contributes": {
+    "commands": [
+      {
+        "command": "scriptRunner.run",
+        "title": "Run in New Terminal",
+        "category": "Script Runner",
+        "icon": "$(play)"
+      },
+      {
+        "command": "scriptRunner.runWithArgs",
+        "title": "Run in New Terminal with Arguments...",
+        "category": "Script Runner"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "scriptRunner.run",
+          "when": "!explorerResourceIsFolder && resourceExtname =~ /^\\.(sh|bat|cmd|ps1)$/i",
+          "group": "navigation@100"
+        },
+        {
+          "command": "scriptRunner.runWithArgs",
+          "when": "!explorerResourceIsFolder && resourceExtname =~ /^\\.(sh|bat|cmd|ps1)$/i",
+          "group": "navigation@101"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "scriptRunner.run",
+          "when": "resourceExtname =~ /^\\.(sh|bat|cmd|ps1)$/i",
+          "group": "navigation@100"
+        },
+        {
+          "command": "scriptRunner.runWithArgs",
+          "when": "resourceExtname =~ /^\\.(sh|bat|cmd|ps1)$/i",
+          "group": "navigation@101"
+        }
+      ],
+      "editor/title/context": [
+        {
+          "command": "scriptRunner.run",
+          "when": "resourceExtname =~ /^\\.(sh|bat|cmd|ps1)$/i",
+          "group": "navigation@100"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "scriptRunner.run",
+          "when": "config.scriptRunner.showRunButtonInEditorTitle && resourceExtname =~ /^\\.(sh|bat|cmd|ps1)$/i",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "scriptRunner.run",
+          "when": "resourceExtname =~ /^\\.(sh|bat|cmd|ps1)$/i"
+        },
+        {
+          "command": "scriptRunner.runWithArgs",
+          "when": "resourceExtname =~ /^\\.(sh|bat|cmd|ps1)$/i"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Run Script in Terminal",
+      "properties": {
+        "scriptRunner.cwd": {
+          "type": "string",
+          "enum": [
+            "scriptDirectory",
+            "workspaceRoot"
+          ],
+          "enumDescriptions": [
+            "Start the terminal in the folder that contains the script.",
+            "Start the terminal in the workspace folder that contains the script."
+          ],
+          "default": "scriptDirectory",
+          "description": "Working directory of the new terminal."
+        },
+        "scriptRunner.bashPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to bash used for .sh files. Leave empty to auto-detect (Git Bash, then WSL on Windows; /bin/bash elsewhere)."
+        },
+        "scriptRunner.powershellPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to PowerShell used for .ps1 files. Leave empty for powershell.exe on Windows and pwsh elsewhere."
+        },
+        "scriptRunner.bypassExecutionPolicy": {
+          "type": "boolean",
+          "default": true,
+          "description": "Start PowerShell with -ExecutionPolicy Bypass (process scope only) so .ps1 files are not blocked."
+        },
+        "scriptRunner.saveBeforeRun": {
+          "type": "boolean",
+          "default": true,
+          "description": "Save the script first if it has unsaved changes."
+        },
+        "scriptRunner.reuseTerminal": {
+          "type": "boolean",
+          "default": false,
+          "description": "Reuse the terminal of a previous run of the same script instead of opening a new one."
+        },
+        "scriptRunner.preserveFocus": {
+          "type": "boolean",
+          "default": false,
+          "description": "Keep keyboard focus in the editor instead of moving it to the terminal."
+        },
+        "scriptRunner.showRunButtonInEditorTitle": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show a ▶ Run button in the editor title bar for supported scripts."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^3.0.0"
+  }
+}
